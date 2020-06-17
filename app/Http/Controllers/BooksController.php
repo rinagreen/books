@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Book;
+use App\Models\Author;
 use Illuminate\Http\Request;
 
 class BooksController extends Controller
@@ -16,6 +18,58 @@ class BooksController extends Controller
         $data['pageTitle'] = 'List of All Books';
 
         return view('books.index', $data);
+    }
+
+    public function ajaxAllBooks(Request $request)
+    {
+        $columns = array(
+            0 => 'id',
+            1 => 'title',
+            2 => 'code',
+            3 => 'author',
+        );
+
+        $limit = $request->input('length');
+        $start = $request->input('start');
+        $dir = $request->input('order.0.dir');
+        $order = $columns[$request->input('order.0.column')];            
+        $search = $request->input('search');
+        $searchColumns = ['id', 'title', 'code', 'author_id'];
+
+        $books = Book::ofSearch( $search, $searchColumns )
+            ->offset( $start )
+            ->limit( $limit )
+            ->orderBy( $order, $dir )
+            ->get();
+
+        $parameters = '?search=' . $request->input('search');
+
+        $data = array();
+        if(!empty($books))
+        {
+            foreach ($books as $book)
+            {
+                $nestedData['id'] = $book->id;
+                $nestedData['title'] = $book->title;
+                $nestedData['code']  = $book->code;
+                $nestedData['author'] = $book->author_id ? Author::find($book->author_id)->name : '';
+                $nestedData['actions'] = '<a href="#editBookModal" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
+                     <a href="#deleteBookModal" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>';
+                $data[] = $nestedData;
+            }
+        }
+
+        $recordsTotal = Book::count();
+        $recordsFiltered = Book::ofSearch( $search, $searchColumns )->orderBy('id', 'asc')->count();
+          
+        $jsonData = array(
+            "draw"            => intval($request->input('draw')),  
+            "recordsTotal"    => intval($recordsTotal),  
+            "recordsFiltered" => intval($recordsFiltered), 
+            "data"            => $data   
+        );
+            
+        echo json_encode($jsonData); 
     }
 
     /**
