@@ -17,5 +17,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::post('ajax-all-books', 'BooksController@ajaxAllBooks')->name('book.books');
 Route::resource('books', 'BooksController');
 Route::resource('author', 'AuthorController');
