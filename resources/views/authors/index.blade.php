@@ -18,32 +18,19 @@
                  </div>
               </div>
               <div class="col-sm-6 col-lg-7 text-right"> 
-                 <a href="#addBookModal" class="btn btn-success" data-toggle="modal">
+                 <a href="#addAuthorModal" class="btn btn-success" data-toggle="modal">
                  <i class="material-icons">&#xE147;</i>
-                 <span>Add New Book</span>
+                 <span>Add New Author</span>
                  </a>
               </div>
            </div>
-
-           <div class="row mb-3 ">
-             <!--  <div class="col-2">
-                <h5>Export as:</h5>
-              </div> -->
-              <div class="col-12">
-                <h5 style="display: inline-block;">Export as:</h5>
-                <button type="button" class="btn btn-primary btn-sm csv_export">CSV</button>
-                <button type="button" class="btn btn-secondary btn-sm xml_export">XML</button>
-              </div>             
-           </div>
-
+ 
            <div class="table-responsive scroll">
-              <table class="table table-bordered table-striped" id="books" width="100%" cellspacing="0">
+              <table class="table table-bordered table-striped" id="authors" width="100%" cellspacing="0">
                  <thead>
                     <tr>
                        <th>ID</th>
-                       <th>Title</th>
-                       <th>Code</th>
-                       <th>Author</th>
+                       <th>Name</th> 
                        <th>Actions</th>
                     </tr>
                  </thead>
@@ -56,33 +43,20 @@
   </div>
 
    <!-- Add Modal HTML -->
-   <div id="addBookModal" class="modal fade">
+   <div id="addAuthorModal" class="modal fade">
       <div class="modal-dialog">
          <div class="modal-content">            
-            <form action="{{ route('books.store') }}" method="POST" name="add_book">
+            <form action="{{ route('authors.store') }}" method="POST" name="add_author">
                {{ csrf_field() }}
                <div class="modal-header">
-                  <h4 class="modal-title">Add Book</h4>
+                  <h4 class="modal-title">Add Author</h4>
                   <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                </div>
                <div class="modal-body">
                   <div class="form-group">
-                     <label>Title</label>
-                     <input type="text" name="title" class="form-control" required>
-                  </div>
-                  <div class="form-group">
-                     <label>Code</label>
-                     <input type="text" name="code" class="form-control" required>
+                     <label>Name</label>
+                     <input type="text" name="name" class="form-control" required>
                   </div> 
-                  <div class="form-group">
-                    <label for="select_authors">Author</label>
-                    <select class="form-control" id="select_authors" name="author_id">
-                      <option> -- </option> 
-                      @foreach($authors as $author)
-                      <option value="{{ $author->id }}" >{{ $author->name }}</option> 
-                      @endforeach
-                    </select>
-                  </div>
                </div>
                <div class="modal-footer">
                   <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
@@ -95,34 +69,21 @@
 
 
    <!-- Edit Modal HTML -->
-   <div id="editBookModal" class="modal fade">
+   <div id="editAuthorModal" class="modal fade">
       <div class="modal-dialog">
          <div class="modal-content"> 
             <form  id="edit-form" method="POST" action="">
               @csrf
               @method('PATCH')
                <div class="modal-header">
-                  <h4 class="modal-title">Edit Book</h4>
+                  <h4 class="modal-title">Edit Author</h4>
                   <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                </div>
                <div class="modal-body">
                   <div class="form-group">
-                     <label>Title</label>
-                     <input type="text" name="title" class="form-control edit_title" required>
-                  </div>
-                  <div class="form-group">
-                     <label>Code</label>
-                     <input type="text" name="code" class="form-control edit_code" required>
+                     <label>Name</label>
+                     <input type="text" name="name" class="form-control edit_name" required>
                   </div> 
-                  <div class="form-group">
-                    <label for="select_authors">Author</label>
-                    <select class="form-control edit_author" id="select_authors" name="author_id">
-                      <option> -- </option> 
-                      @foreach($authors as $author)
-                      <option value="{{ $author->id }}" >{{ $author->name }}</option> 
-                      @endforeach
-                    </select>
-                  </div>
                </div>
                <div class="modal-footer">
                   <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
@@ -134,15 +95,15 @@
    </div>
 
    <!-- Delete Modal HTML -->
-   <div id="deleteBookModal" class="modal fade">
+   <div id="deleteAuthorModal" class="modal fade">
       <div class="modal-dialog">
          <div class="modal-content"> 
             <div class="modal-header">
-               <h4 class="modal-title">Delete Book</h4>
+               <h4 class="modal-title">Delete Author</h4>
                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
             </div>
             <div class="modal-body">
-               <p>Are you sure you want to delete these Records?</p>
+               <p>Are you sure you want to delete these Record?</p>
                <p class="text-warning"><small>This action cannot be undone.</small></p>
             </div> 
             <div class="modal-footer">
@@ -158,20 +119,17 @@
    </div>
 
    @push('scripts')
-  
+
+
     <script>
 
         $(document).ready(function () {
  
-            const TABLE = $('#books').DataTable({  
+            const TABLE = $('#authors').DataTable({  
                 "dom": "<'col-sm-12'tr><'row' <'col-sm-12 col-sm-6'l><'col-sm-12 col-sm-6'p>>" ,  
-                dom: 'Bfrtip',
-                buttons: [ 
-                    'colvis'
-                ],
                 "aaSorting": [[ 0, "desc" ]],
                 "aoColumnDefs": [
-                  { "bSortable": false, "aTargets": [ 4 ] },
+                  { "bSortable": false, "aTargets": [ 2 ] },
                   { "sType": "numeric", "aTargets": [ 0 ] }
                 ],
                 "language": {
@@ -184,7 +142,7 @@
                 "processing": true,
                 "serverSide": true,
                 "ajax":{
-                   "url": "{{ url('ajax-all-books') }}" ,
+                   "url": "{{ url('ajax-all-authors') }}" ,
                    "dataType": "json",
                    "type": "POST",
                     "data": function (d) {
@@ -194,9 +152,7 @@
                  }, 
                 "columns": [
                     { "data": "id" },
-                    { "data": "title" },
-                    { "data": "code" },
-                    { "data": "author_id" },
+                    { "data": "name" },
                     { "data": "actions" }
                 ],
                 "drawCallback": function( data ) {  
@@ -207,42 +163,22 @@
 
             $('#column_search').on( 'keyup', function () {
               TABLE.draw();
-            });
- 
- 
+            });   
 
-            $('#books').on('click', '.editBookModalButton', function () {                
-               let code = $(this).attr('data-code'),
-                  title = $(this).attr('data-title'),
+            $('#authors').on('click', '.editAuthorModalButton', function () {                
+               let name = $(this).attr('data-name'),
                   url = $(this).attr('data-url'),
                   author_id = $(this).attr('data-author-id')
-
-                  $('.edit_code').val(code);
-                  $('.edit_title').val(title);
-                  $('.edit_author').val(author_id);
+ 
+                  $('.edit_name').val(name);
                   $('#edit-form').attr('action', url);
             });
 
-            $('#books').on('click', '.deleteBookModalButton', function () {                
+            $('#authors').on('click', '.deleteAuthorModalButton', function () {                
                let url = $(this).attr('data-url'); 
                $('#delete-form').attr('action', url);
             });
  
-
-             $(document).on('click', '.csv_export', function (){
-                $('table').tableExport({type:'csv'});
-             });
-
-             $(document).on('click', '.xml_export', function (){
-                $('table').tableExport({ 
-                    type:'excel',
-                    mso: {
-                      fileFormat:'xmlss',
-                      worksheetName: ['Table 1','Table 2', 'Table 3']
-                    }
-                });
-             });
-
         }); 
     </script>
 

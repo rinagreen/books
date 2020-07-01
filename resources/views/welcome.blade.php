@@ -82,11 +82,12 @@
             <div class="content">
                 <div class="links">Welcome to </div>
                 <div class="title m-b-md">
-                    Book Nook
+                    Queens Library
                 </div>
 
                 <div class="links">
-                    <a href="/books">Check All Books</a> 
+                    <a href="/books">Books</a> 
+                    <a href="/authors">Authors</a> 
                 </div>
             </div>
         </div>

@@ -19,4 +19,6 @@ Route::get('/', function () {
 
 Route::post('ajax-all-books', 'BooksController@ajaxAllBooks')->name('book.books');
 Route::resource('books', 'BooksController');
-Route::resource('author', 'AuthorController');
+
+Route::post('ajax-all-authors', 'AuthorController@ajaxAllAuthors')->name('author.authors');
+Route::resource('authors', 'AuthorController');

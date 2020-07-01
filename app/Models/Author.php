@@ -20,4 +20,17 @@ class Author extends Model
     {
         return $this->hasMany(Book::class);
     }
+
+    public function scopeOfSearch( $query, $search, $columns )
+    {
+        $query->where(function($query) use ( $search, $columns ) {
+            if( $search != '' ) {
+                foreach($columns as $column) {   
+                    $query->orWhere($column,'LIKE','%'.$search.'%');
+                } 
+            }   
+        });
+        
+        return $query;
+    }
 }

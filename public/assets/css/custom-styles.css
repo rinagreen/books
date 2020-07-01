@@ -17,7 +17,7 @@
 		background: #435d7d;
 		color: #fff;
 		padding: 16px 30px;
-		margin: -20px -25px 10px;
+		/*margin: -20px -25px 10px;*/
 		border-radius: 3px 3px 0 0;
     }
     .table-title h2 {
@@ -218,3 +218,7 @@
 	.modal form label {
 		font-weight: normal;
 	}	
+
+	#books_filter {
+		display: none;
+	}

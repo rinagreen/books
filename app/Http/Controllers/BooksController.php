@@ -22,7 +22,7 @@ class BooksController extends Controller
             0 => 'id',
             1 => 'title',
             2 => 'code',
-            3 => 'author',
+            3 => 'author_id',
         );
 
         $limit = $request->input('length');
@@ -33,6 +33,9 @@ class BooksController extends Controller
         $searchColumns = ['id', 'title', 'code', 'author_id'];
 
         $books = Book::ofSearch( $search, $searchColumns )
+            ->orWhereHas('authors', function($q) use ($search) {
+                $q->where('name', 'LIKE', '%'.$search.'%');
+            })
             ->offset( $start )
             ->limit( $limit )
             ->orderBy( $order, $dir )
@@ -58,7 +61,7 @@ class BooksController extends Controller
                 $nestedData['id'] = $book->id;
                 $nestedData['title'] = $book->title;
                 $nestedData['code']  = $book->code;
-                $nestedData['author'] = $book->author_id ? Author::find($book->author_id)->name : '';
+                $nestedData['author_id'] = $book->author_id ? Author::find($book->author_id)->name : '';
                 $nestedData['actions'] = $edit_action.$delete_action;
                 $data[] = $nestedData;
             }
